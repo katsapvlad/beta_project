@@ -51,3 +51,16 @@ post '/new' do
 	erb :index
 	
 end
+
+
+get '/post/:id' do
+
+	@id = params[:id]
+	@db = SQLite3::Database.new 'blog.db'
+	@db.results_as_hash = true
+	results = @db.execute 'SELECT * FROM Posts WHERE id = ?', [@id]
+	@row = results[0]
+
+	erb :post
+
+end
