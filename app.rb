@@ -25,7 +25,10 @@ configure do
 end
 
 get '/' do
-	erb "Hello! <a href=\"https://github.com/bootstrap-ruby/sinatra-bootstrap\">Original</a> pattern has been modified for <a href=\"http://rubyschool.us/\">Ruby School</a>"			
+	@db = SQLite3::Database.new 'blog.db'
+	@db.results_as_hash = true
+	@results = @db.execute 'SELECT * FROM Posts ORDER BY id DESC'
+	erb :index
 end
 
 get '/new' do
@@ -35,7 +38,7 @@ end
 post '/new' do
 
 	@db = SQLite3::Database.new 'blog.db'
-	#@db.results_as_hash = true
+	@db.results_as_hash = true
 
 	@content = params[:content]
 	if @content.size <= 0
@@ -44,7 +47,7 @@ post '/new' do
 	end
   
 	@db.execute 'INSERT INTO Posts (created_date, content) VALUES (datetime(), ?)', [@content]
-
-	erb "#{@content}"
+	@results = @db.execute 'SELECT * FROM Posts ORDER BY id DESC'
+	erb :index
 	
 end
