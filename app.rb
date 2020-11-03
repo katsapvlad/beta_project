@@ -5,13 +5,22 @@ require 'sinatra/reloader'
 require 'sqlite3'
 
 
-def init_db
+
+
+before do 
 	@db = SQLite3::Database.new 'blog.db'
 	@db.results_as_hash = true
 end
 
-before do 
-	init_db
+configure do
+	@db = SQLite3::Database.new 'blog.db'
+	@db.results_as_hash = true
+	@db.execute 'CREATE TABLE IF NOT EXISTS "Posts" (
+	"id"	INTEGER,
+	"created_date"	TEXT,
+	"content"	TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);'
 end
 
 get '/' do
@@ -23,6 +32,13 @@ get '/new' do
 end
 
 post '/new' do
+
 	@content = params[:content]
+	if @content.size <= 0
+		@error = 'Type post text!'
+		return erb :new
+	else 
+		return erb "succes!"
+	end
 
 end
