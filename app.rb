@@ -14,13 +14,14 @@ end
 
 configure do
 	@db = SQLite3::Database.new 'blog.db'
-	@db.results_as_hash = true
+	#@db.results_as_hash = true
 	@db.execute 'CREATE TABLE IF NOT EXISTS "Posts" (
-	"id"	INTEGER,
-	"created_date"	TEXT,
-	"content"	TEXT,
-	PRIMARY KEY("id" AUTOINCREMENT)
-);'
+		"id"	INTEGER,
+		"created_date"	TEXT,
+		"content"	TEXT,
+		PRIMARY KEY("id" AUTOINCREMENT)
+	);'
+	@db.close
 end
 
 get '/' do
@@ -33,12 +34,17 @@ end
 
 post '/new' do
 
+	@db = SQLite3::Database.new 'blog.db'
+	#@db.results_as_hash = true
+
 	@content = params[:content]
 	if @content.size <= 0
 		@error = 'Type post text!'
 		return erb :new
-	else 
-		return erb "succes!"
 	end
+  
+	@db.execute 'INSERT INTO Posts (created_date, content) VALUES (datetime(), ?)', [@content]
 
+	erb "#{@content}"
+	
 end
