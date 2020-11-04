@@ -21,6 +21,14 @@ configure do
 		"content"	TEXT,
 		PRIMARY KEY("id" AUTOINCREMENT)
 	);'
+
+	@db.execute 'CREATE TABLE IF NOT EXISTS "Comments" (
+		"id"	INTEGER,
+		"created_date"	TEXT,
+		"content"	TEXT,
+		"post_id" INTEGER,
+		PRIMARY KEY("id" AUTOINCREMENT)
+	);'
 	@db.close
 end
 
@@ -62,5 +70,12 @@ get '/post/:id' do
 	@row = results[0]
 
 	erb :post
+
+end
+
+post '/post/:id' do
+
+	id = params[:id]
+	content = params[:content]
 
 end
