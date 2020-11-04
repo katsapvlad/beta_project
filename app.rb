@@ -54,6 +54,9 @@ post '/new' do
 	if content.size <= 0
 		@error = 'Type post text!'
 		return erb :new
+	elsif name.size <= 0
+		@error = 'Type your name!'
+		return erb :new
 	end
   
 	@db.execute 'INSERT INTO Posts (created_date, content, name) VALUES (datetime(), ?, ?)', [content, name]
@@ -82,6 +85,16 @@ post '/post/:id' do
 	id = params[:id]
 	content = params[:content]
 	name = params[:name]
+	@comments = @db.execute 'SELECT * FROM Comments WHERE post_id = ? ORDER BY id', [id]
+	results = @db.execute 'SELECT * FROM Posts WHERE id = ?', [id]
+	@row = results[0]
+	if content.size <= 0
+		@error = 'Type comment text!'
+		return erb :post
+	elsif name.size <= 0
+		@error = 'Type your name!'
+		return erb :post
+	end
 	@db.execute 'INSERT INTO Comments (created_date, content, post_id, name) VALUES (datetime(), ?, ?, ?)', [content, id, name]
 	@comments = @db.execute 'SELECT * FROM Comments WHERE post_id = ? ORDER BY id', [id]
 	results = @db.execute 'SELECT * FROM Posts WHERE id = ?', [id]
