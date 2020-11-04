@@ -74,8 +74,12 @@ get '/post/:id' do
 end
 
 post '/post/:id' do
-
+	@db = SQLite3::Database.new 'blog.db'
+	@db.results_as_hash = true
 	id = params[:id]
 	content = params[:content]
-
+	@db.execute 'INSERT INTO Comments (created_date, content, post_id) VALUES (datetime(), ?, ?)', [content, id]
+	results = @db.execute 'SELECT * FROM Posts WHERE id = ?', [id]
+	@row = results[0]
+	erb :post
 end
