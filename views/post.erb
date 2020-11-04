@@ -3,26 +3,32 @@
 <h4>
 	<%= @row['content']%>
 </h4>
+
 <p>
 	<br>
-		<span style="font-size: 75%; color: #999">Added at <%= @row['created_date']%></span>
+		<span style="font-size: 75%; color: #999">Added at <%= @row['created_date']%> by <%=@row['name']%></span>
 	<br>
 </p>
 <br>
+
 <h3>Comments:</h3><br>
 
-<%@comments.each do |comment|%>
-	<p>
-		 <%= comment['content']%>
-		 <br>
-			<span style="font-size: 75%; color: #999">Added at <%= comment['created_date']%></span>
-		 <br>
-	</p><hr>
-<%end%>
+	<%@comments.each do |comment|%>
+		<p>
+			 <%= comment['content']%>
+			 <br>
+				<span style="font-size: 75%; color: #999">Added at <%= comment['created_date']%> by <%=comment['name']%></span>
+			 <br>
+		</p><hr>
+	<%end%>
+
 
 <p>
 	<form action="/post/<%= @row['id']%>" method="POST">
+		<br>
+		<label>Your name:</label>
+   	<input name = "name" type="text" class="form-control" placeholder="Type your name..."><br>
 		<textarea name="content" class="form-control" rows="6" placeholder="Type comment text post here..."></textarea><br>
-	  	<button type="submit" class="btn btn-primary">Add comment</button>
+	  	<button type="submit" class="btn btn-primary">Add comment</button><br>
 	</form>
 </p>
